@@ -1,0 +1,6 @@
+# Binaries
+app/services/salescart-api/salescart-api
+
+# Mac
+.DS_Store
+

@@ -1,0 +1,20 @@
+FROM golang:1.17 as build_salescart-api
+ENV CGO_ENABLED=0
+ARG BUILD_REF
+COPY . /salescart
+WORKDIR /salescart/app/services/salescart-api
+RUN go build -ldflags "-X main.build=${BUILD_REF}"
+
+FROM alpine
+ARG BUILD_DATE
+ARG BUILD_REF
+COPY --from=build_salescart-api /salescart/app/services/salescart-api/salescart-api /salescart/salescart-api
+WORKDIR /salescart/
+CMD ["./salescart-api"]
+
+LABEL org.opencontainers.image.created="${BUILD_DATE}" \
+      org.opencontainers.image.title="salescart-api" \
+      org.opencontainers.image.authors="Christian Abels <christian.abels@lucidbunch.com>" \
+      org.opencontainers.image.source="https://github.com/lucid-bunch/salescart/app/services/salescart-api" \
+      org.opencontainers.image.revision="${BUILD_REF}" \
+      org.opencontainers.image.vendor="Lucid Bunch"
