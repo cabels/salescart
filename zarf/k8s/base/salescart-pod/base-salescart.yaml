@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: salescart-system
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: salescart-pod
+  namespace: salescart-system
+spec:
+  selector:
+    matchLabels:
+      app: salescart
+  template:
+    metadata:
+      labels:
+        app: salescart
+    spec:
+      dnsPolicy: ClusterFirstWithHostNet
+      hostNetwork: true
+      terminationGracePeriodSeconds: 60
+      containers:
+        - name: salescart-api
+          image: salescart-api-image
